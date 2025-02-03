@@ -50,13 +50,13 @@ const WikiPage = () => {
       />
       <button onClick={fetchWikipedia}>Get Wikipedia Page</button>
       {WikiPage && (
-        <div>
+        <div className='wikipage'>
           {/* <h2>Wikipedia Page for {city}</h2> */}
           <iframe 
           id="wiki"
             src = {WikiPage}
             width="100%"
-            height="390px"
+            height="320px"
             title='Wikipedia Page'
           ></iframe>
         </div>

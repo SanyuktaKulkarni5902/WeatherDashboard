@@ -1,3 +1,14 @@
+.wikipage-container{
+    height: 100%;
+    /* display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 100%;
+    overflow: hidden; */
+}
+
 #wiki{
     padding: 10px 10px;
     overflow: none;
@@ -5,5 +16,6 @@
     overflow: hidden;
     border: 1px solid black;
     max-width: 100%;
-    height: auto;
+    /* max-height: 80%; */
+    height: 100%;
 }   
