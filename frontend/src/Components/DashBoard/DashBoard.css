@@ -139,23 +139,23 @@
 }
 
 @media (max-width: 750px) {
-  .main-container {
+  .main-container-light {
     flex-direction: column;
     padding: 10px;
   }
-  .left-half {
+  .left-half-light {
     width: 100%;
   }
   .right-half {
     width: 100%;
     display: inline;
   }
-  .slider-box {
+  .slider-box-light{
     width: 100%;
     margin-left: 0;
     height: auto;
   }
-  .wikipage-box {
+  .wikipage-box-light {
     width: 100%;
     height: auto;
   }
@@ -163,19 +163,60 @@
 
 
 @media (max-width: 750px) {
-.main-container{
+.main-container-light{
   display: block;
   overflow: scroll;
 }
 
 
-.left-half{
+.left-half-light{
   flex: 0;
   margin-bottom: 10px;
 }
 
-.slider-box{
+.slider-box-light{
   margin-bottom: 10px;
 }
 }
 
+
+@media (max-width: 750px) {
+  .main-container-dark {
+    flex-direction: column;
+    padding: 10px;
+  }
+  .left-half-dark{
+    width: 100%;
+  }
+  .right-half {
+    width: 100%;
+    display: inline;
+  }
+  .slider-box-dark{
+    width: 100%;
+    margin-left: 0;
+    height: auto;
+  }
+  .wikipage-box-dark{
+    width: 100%;
+    height: auto;
+  }
+}
+
+
+@media (max-width: 750px) {
+.main-container-dark{
+  display: block;
+  overflow: scroll;
+}
+
+
+.left-half-dark{
+  flex: 0;
+  margin-bottom: 10px;
+}
+
+.slider-box-dark{
+  margin-bottom: 10px;
+}
+}

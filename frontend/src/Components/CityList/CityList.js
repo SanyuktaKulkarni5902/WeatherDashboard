@@ -8,8 +8,6 @@ import Spinner from 'react-bootstrap/Spinner';
 const API_KEY = process.env.REACT_APP_API_KEY;
 const CITIES_API_URL = process.env.REACT_APP_API_URL; 
 
-
-
 const CityList = ({ setSelectedCity,mode}) => {
   const [weatherData, setWeatherData] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -176,7 +174,6 @@ const handleSearchInputChange=(e)=>{
 
 }
 
-//for displaying the list on top
 const tableRef = useRef(null);
 useEffect(() => {
   if (tableRef.current) {

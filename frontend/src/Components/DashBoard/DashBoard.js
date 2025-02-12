@@ -1,14 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Slider from '../Slider/Slider.js';
 import CityList from '../CityList/CityList.js';
 import WikiPage from '../WikiPage/WikiPage.js';
 import './DashBoard.css';
 import Theme from '../Theme/Theme.js';
- 
+
 export default function DashBoard() {
  
   const [mode , setMode] = useState("light");
   const [selectedCity, setSelectedCity] = useState("Pune");
+  const wikipageRef = useRef(null);
+
+  useEffect(() => {
+    if(wikipageRef.current){
+      wikipageRef.current.scrollTop = 0;
+      console.log("scrolling to top")
+    }
+  })
  
   return (
     <div className={mode === "light"?'main-container-light' : 'main-container-dark'}>
@@ -26,7 +34,7 @@ export default function DashBoard() {
         <div className={mode === "light" ?'slider-box-light' : 'slider-box-dark'}>
           <Slider mode={mode}/>
         </div>
-        <div className={mode === "light"? 'wikipage-box-light': 'wikipage-box-dark'}>
+        <div ref={wikipageRef} className={mode === "light"? 'wikipage-box-light': 'wikipage-box-dark'}>
           <WikiPage mode={mode} selectedCity={selectedCity} />
         </div>
       </div>

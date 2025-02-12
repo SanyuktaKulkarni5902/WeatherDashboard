@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState} from 'react';
 import './WikiPage.css';
 import parse from 'html-react-parser';
 
@@ -34,12 +34,11 @@ const WikiPage = ({ selectedCity , mode} ) => {
     fetchWikipediaContent();
   }, [normalizedCity]);
 
-  // useEffect(() => {
-  //   window.scrollTo(0, 0);
-  // }, [wikiContent]);
 
   return (
-    <div className={mode === "light" ? "wikipage-container-light" : "wikipage-container-dark"}>
+    <div 
+      
+      className={mode === "light" ? "wikipage-container-light" : "wikipage-container-dark"}>
       {wikiContent ? (
         <div className="wiki-content">
           <h2>{selectedCity}</h2>
@@ -53,104 +52,6 @@ const WikiPage = ({ selectedCity , mode} ) => {
 };
 
 export default WikiPage;
-
-
-// import React, { useEffect, useState } from "react";
- 
-// const WikiPage = ({ selectedCity }) => {
-//   const [content, setContent] = useState("Loading...");
- 
-//   useEffect(() => {
-//     if (!selectedCity) return;
- 
-//     const fetchWikiContent = async () => {
-//       try {
-// const response = await fetch(`https://en.wikipedia.org/wiki/${selectedCity}`);
-//         const html = await response.text();
- 
-//         // Parse the response text into a DOM structure
-//         const parser = new DOMParser();
-        
-//         const doc = parser.parseFromString(html, "text/html");
-//         console.log(doc);
-//         // Extract only the content inside the `.mw-page-container`
-//         const wikiContent = doc.querySelector(".mw-page-container-inner");
-//         console.log(wikiContent);
-//         setContent(wikiContent ? wikiContent.innerHTML : "Content not found.");
-//       } catch (error) {
-//         console.error("Error fetching Wikipedia page:", error);
-//         setContent("Error loading content.");
-//       }
-//     };
- 
-//     fetchWikiContent();
-//   }, [selectedCity]);
- 
-//   return (
-//     <div className="wikipage-box" dangerouslySetInnerHTML={{ __html: content }} />
-//   );
-// };
- 
-// export default WikiPage;
-
-
-// import React, {useEffect, useState} from 'react'
-// import './WikiPage.css'
- 
-// const WikiPage = ({ selectedCity }) => {
-//  selectedCity = selectedCity.normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/\s*\(.*?\)\s*/g, '');
-  
-//   const [WikiPage, setWikiPage] = useState('');
- 
-  
-//  useEffect(() => { 
-//     if (!selectedCity) return;
-//     const fetchWikipedia = async () => {
-//     const wikiUrl = `https://en.wikipedia.org/wiki/${selectedCity}`;
-//     // const wikiUrl = `https://en.wikipedia.org/w/api.php?action=parse&page=${encodeURIComponent(selectedCity)}&format=json&origin=*`;
-//     try{
-//       const response = await fetch(wikiUrl);
-//       // const data = await response.json();
-//       const htmlText = await response.text();
-
-//       const parser = new DOMParser();
-//       const doc = parser.parseFromString(htmlText, 'text/html');
-//       const content = doc.querySelector('mw-page-container-inner');
- 
-//       if(content){
-//         setWikiPage(content.innerHTML);
-//       }
-//       // else{
-//       //   setWikiPage('<p>Wikipedia page not found</p>');
-//       // }
-//     }catch(error){
-//       console.error("Error Fetching the wikipedia page", error);
-//       setWikiPage('<p>Error Loading Content</p>');
-//     }
-//   };
-//   fetchWikipedia();}, [selectedCity]);
-//   return (
-//     <div className='wikipage-container'>
-//       {/* <h1>Wikipedia Page</h1> */}      
-//       {/* {WikiPage && (
-//           // <iframe
-//           //   className='iframe'
-//           //   id="wiki"
-//           //   src={WikiPage}
-//           //   width="100%"
-//           //   height="320px"
-//           //   title='Wikipedia Page'
-//           // ></iframe>
-//           <embed src={WikiPage} width="100%" height="320px"></embed>
-//       )} */}
-//       {/* <div className='wiki-content' dangerouslySetInnerHTML={{__html: WikiPage}}> */}
-
-//       <embed src={WikiPage} width="100%" height="320px"></embed>
-//     </div>
-//   );
-// };
-
-// export default WikiPage;
 
 
 // import React, {useEffect, useState} from 'react'
