@@ -4,7 +4,7 @@ import CityList from '../CityList/CityList.js';
 import WikiPage from '../WikiPage/WikiPage.js';
 import './DashBoard.css';
 import Theme from '../Theme/Theme.js';
-// import Forecast from '../Forecast/Forecast.js';
+
  
 export default function DashBoard() {
  
@@ -33,7 +33,7 @@ export default function DashBoard() {
           <WikiPage mode={mode} selectedCity={selectedCity} />
         </div>
       </div>
-      {/* <Forecast selectedCity={selectedCity}/> */}
+      
     </div>
   );
 }

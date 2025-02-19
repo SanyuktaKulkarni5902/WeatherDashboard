@@ -28,15 +28,16 @@
 }
 
 #location-icon-light{
-  font-size: 25px;
+
+  font-size: 28px;
   margin-right: 5px;
-  margin-top: 2px; 
+  margin-top: auto; 
 }
 
 #location-icon-dark{
-  font-size: 25px;
+  font-size: 28px;
   margin-right: 5px;
-  margin-top: 2px;
+  margin-top: auto;
   color: white;
 }
 

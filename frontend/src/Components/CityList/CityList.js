@@ -1,8 +1,8 @@
 //importing necsessary modules and components
 import React, { useState, useEffect, useRef } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
 import "./CityList.css";
 import Spinner from "react-bootstrap/Spinner";
+import "bootstrap/dist/css/bootstrap.min.css";
 
 //API key and URL
 const API_KEY = process.env.REACT_APP_API_KEY;
@@ -19,6 +19,7 @@ const CityList = ({ setSelectedCity, mode }) => {
   const [filteredCities, setFilteredCities] = useState([]); //for storing filtered city names
   const [loading, setLoading] = useState(false); //for storing loading status
   const [noMatches, setNoMatches] = useState(false); //for storing no matches status
+  const noMatchesMessage = "no matches found";
 
   //fetching city names from city names url and storing in cities state ----------------------------------------------------------------
   useEffect(() => {
@@ -52,22 +53,80 @@ const CityList = ({ setSelectedCity, mode }) => {
     fetchCities();
   }, []);
 
-  //fetching weather data for the cities and storing in weatherData state ----------------------------------------------------------------
+  // //fetching weather data for the cities and storing in weatherData state ----------------------------------------------------------------
+  // useEffect(() => {
+  //   const fetchWeatherData = async () => {
+  //     if (filteredCities.length > 0) {
+  //       const results = [...weatherData]; // Keep previously fetched data
+  //       let fetchedCities = results.map((city) => city.name.toLowerCase()); // Get the names of the fetched cities
+
+  //       for (let city of filteredCities.slice(0, loadedCities)) {
+  //         //looping through the filtered cities
+  //         if (!fetchedCities.includes(city.toLowerCase())) {
+  //           try {
+  //             const response = await fetch(
+  //               `https://api.openweathermap.org/data/2.5/weather?q=${city},IN&units=metric&appid=${API_KEY}`
+  //             );
+
+  //             if (response.ok) {
+  //               console.log("okay");
+  //             } else {
+  //               console.log("error");
+  //             }
+  //             // const data = await response.json();
+  //           } catch (error) {
+  //             // const mute = error;
+  //             // return;
+  //             console.error("Error fetching weather data:", error);
+  //           }
+
+  //           // console.log("api response = ", data);
+
+  //           // console.log("data =",data);
+  //           // if (response.ok && data.cod !== "404") {
+  //           //   const data = await response.json(); //fetching the data
+
+  //           //   if (
+  //           //     data.main &&
+  //           //     typeof data.main.temp_min === "number" &&
+  //           //     typeof data.main.temp_max === "number"
+  //           //   ) {
+  //           //     results.push(data);
+  //           //   }
+  //           //   else {
+  //           //     console.warn(`City not found: ${city}`);
+  //           //   }
+  //           // } else {
+
+  //           //   console.warn(`City not found: ${city}`);
+
+  //           // }
+  //         }
+  //       }
+
+  //       setWeatherData(results);
+  //     }
+  //   };
+
+  //   fetchWeatherData();
+  // }, [filteredCities, loadedCities]); // Re-fetch on search or load more
+
   useEffect(() => {
     const fetchWeatherData = async () => {
       if (filteredCities.length > 0) {
         try {
           const results = [...weatherData]; // Keep previously fetched data
           let fetchedCities = results.map((city) => city.name.toLowerCase()); // Get the names of the fetched cities
-
+ 
           for (let city of filteredCities.slice(0, loadedCities)) {
             //looping through the filtered cities
             if (!fetchedCities.includes(city.toLowerCase())) {
               const response = await fetch(
                 `https://api.openweathermap.org/data/2.5/weather?q=${city},IN&units=metric&appid=${API_KEY}`
               );
-
+ 
               if (response.ok) {
+ 
                 const data = await response.json(); //fetching the data
                 if (
                   data.main &&
@@ -81,16 +140,16 @@ const CityList = ({ setSelectedCity, mode }) => {
               }
             }
           }
-
+ 
           setWeatherData(results);
         } catch (error) {
           console.error("Error fetching weather data:", error);
         }
       }
     };
-
+ 
     fetchWeatherData();
-  }, [filteredCities, loadedCities]); // Re-fetch on search or load more
+  }, [filteredCities, loadedCities]);
 
   //filtering the cities based on the search term -----------------------------------------------------------------
   useEffect(() => {
@@ -199,64 +258,67 @@ const CityList = ({ setSelectedCity, mode }) => {
       {/* //table to display the cities} */}
       <div className="table-container">
         <div style={{ maxHeight: "400px", overflowY: "auto" }} ref={tableRef}>
-          <table
-            className={mode === "light" ? "table-ct-light" : "table-ct-dark"}
-          >
-            <thead>
-              <tr>
-                <th
-                  className={
-                    mode === "light" ? "table-head-light" : "table-head-dark"
-                  }
-                >
-                  City
-                </th>
-                <th
-                  className={
-                    mode === "light" ? "table-head-light" : "table-head-dark"
-                  }
-                >
-                  Min Temp (&deg;C)
-                </th>
-                <th
-                  className={
-                    mode === "light" ? "table-head-light" : "table-head-dark"
-                  }
-                >
-                  Max Temp (&deg;C)
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-            {noMatches && <p className="tbody-ptag">No matches found!</p>}
-             
-              {displayedCities.map((city, index) => (
-                <tr
-                  className={
-                    mode === "light" ? "table-data-light" : "table-data-dark"
-                  }
-                  key={index}
-                >
-                  <td>
-                    <button
-                      className={
-                        mode === "light"
-                          ? "btn-cityname-light"
-                          : "btn-cityname-dark"
-                      }
-                      onClick={() => setSelectedCity(city.name)}
-                    >
-                      {city.name}
-                    </button>
-                  </td>
-                  <td>{city.main?.temp_min || "N/A"}</td>
-                  <td>{city.main?.temp_max || "N/A"}</td>
-                   {/* //no matches found alert */}
-                   
+          {noMatches ? (
+            <p><b style={{color:"#24609C"}}>Matches Not Found</b></p>
+          ) : (
+            <table
+              className={mode === "light" ? "table-ct-light" : "table-ct-dark"}
+            >
+              <thead>
+                <tr>
+                  <th
+                    className={
+                      mode === "light" ? "table-head-light" : "table-head-dark"
+                    }
+                  >
+                    City
+                  </th>
+                  <th
+                    className={
+                      mode === "light" ? "table-head-light" : "table-head-dark"
+                    }
+                  >
+                    Min Temp (&deg;C)
+                  </th>
+                  <th
+                    className={
+                      mode === "light" ? "table-head-light" : "table-head-dark"
+                    }
+                  >
+                    Max Temp (&deg;C)
+                  </th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {/* {noMatches && <p className="tbody-ptag">No matches found!</p>} */}
+
+                {displayedCities.map((city, index) => (
+                  <tr
+                    className={
+                      mode === "light" ? "table-data-light" : "table-data-dark"
+                    }
+                    key={index}
+                  >
+                    <td>
+                      <button
+                        className={
+                          mode === "light"
+                            ? "btn-cityname-light"
+                            : "btn-cityname-dark"
+                        }
+                        onClick={() => setSelectedCity(city.name)}
+                      >
+                        {city.name}
+                      </button>
+                    </td>
+                    <td>{city.main?.temp_min || "N/A"}</td>
+                    <td>{city.main?.temp_max || "N/A"}</td>
+                    {/* //no matches found alert */}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
 
