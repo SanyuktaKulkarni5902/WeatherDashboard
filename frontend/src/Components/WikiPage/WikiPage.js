@@ -1,13 +1,15 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import './WikiPage.css';
 import parse from 'html-react-parser';
+import { cleanCityName } from '../../utils';
+
+
  
 const WikiPage = ({ selectedCity , mode} ) => {
   // Normalize city name for Wikipedia API compatibility
-  const normalizedCity = selectedCity
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/\s*\(.*?\)\s*/g, '');
+  const normalizedCity = cleanCityName(selectedCity);
+  
+   
  
   const [wikiContent, setWikiContent] = useState('');
   const [loading, setLoading] = useState(true);

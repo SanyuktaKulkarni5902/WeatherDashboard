@@ -2,11 +2,12 @@
 import React, { useState, useEffect, useRef } from "react";
 import "./CityList.css";
 import Spinner from "react-bootstrap/Spinner";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { cleanCityName } from "../../utils";
 
 //API key and URL
 const API_KEY = process.env.REACT_APP_API_KEY;
 const CITIES_API_URL = process.env.REACT_APP_API_URL;
+const WEATHER_BASE_URL = process.env.REACT_APP_OPENWEATHER_API_URL;
 
 //CityList component
 const CityList = ({ setSelectedCity, mode }) => {
@@ -14,14 +15,14 @@ const CityList = ({ setSelectedCity, mode }) => {
   const [weatherData, setWeatherData] = useState([]); //for storing weather data
   const [searchTerm, setSearchTerm] = useState(""); //for storing search term
   const citiesPerPage = 10; //for storing number of cities per page
+
   const [loadedCities, setLoadedCities] = useState(citiesPerPage); //for storing number of loaded cities
   const [cities, setCities] = useState([]); //for storing city names
   const [filteredCities, setFilteredCities] = useState([]); //for storing filtered city names
   const [loading, setLoading] = useState(false); //for storing loading status
   const [noMatches, setNoMatches] = useState(false); //for storing no matches status
-  const noMatchesMessage = "no matches found";
 
-  //fetching city names from city names url and storing in cities state ----------------------------------------------------------------
+  // fetching city names from city names url and storing in cities state ----------------------------------------------------------------
   useEffect(() => {
     const fetchCities = async () => {
       try {
@@ -34,12 +35,10 @@ const CityList = ({ setSelectedCity, mode }) => {
           const indianCities = data.data
             .filter((city) => city.country === "India") // Access the country property
             .map((city) => city.city)
-            .map((city) =>
-              city
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "")
-                .replace(/\s*\(.*?\)\s*/g, "")
-            );
+            .map((city) => {
+              let cleanedcity = cleanCityName(city);
+              return cleanedcity;
+            }); // Clean city names
 
           setCities(indianCities); // Store indian city names
         } else {
@@ -53,101 +52,40 @@ const CityList = ({ setSelectedCity, mode }) => {
     fetchCities();
   }, []);
 
-  // //fetching weather data for the cities and storing in weatherData state ----------------------------------------------------------------
-  // useEffect(() => {
-  //   const fetchWeatherData = async () => {
-  //     if (filteredCities.length > 0) {
-  //       const results = [...weatherData]; // Keep previously fetched data
-  //       let fetchedCities = results.map((city) => city.name.toLowerCase()); // Get the names of the fetched cities
-
-  //       for (let city of filteredCities.slice(0, loadedCities)) {
-  //         //looping through the filtered cities
-  //         if (!fetchedCities.includes(city.toLowerCase())) {
-  //           try {
-  //             const response = await fetch(
-  //               `https://api.openweathermap.org/data/2.5/weather?q=${city},IN&units=metric&appid=${API_KEY}`
-  //             );
-
-  //             if (response.ok) {
-  //               console.log("okay");
-  //             } else {
-  //               console.log("error");
-  //             }
-  //             // const data = await response.json();
-  //           } catch (error) {
-  //             // const mute = error;
-  //             // return;
-  //             console.error("Error fetching weather data:", error);
-  //           }
-
-  //           // console.log("api response = ", data);
-
-  //           // console.log("data =",data);
-  //           // if (response.ok && data.cod !== "404") {
-  //           //   const data = await response.json(); //fetching the data
-
-  //           //   if (
-  //           //     data.main &&
-  //           //     typeof data.main.temp_min === "number" &&
-  //           //     typeof data.main.temp_max === "number"
-  //           //   ) {
-  //           //     results.push(data);
-  //           //   }
-  //           //   else {
-  //           //     console.warn(`City not found: ${city}`);
-  //           //   }
-  //           // } else {
-
-  //           //   console.warn(`City not found: ${city}`);
-
-  //           // }
-  //         }
-  //       }
-
-  //       setWeatherData(results);
-  //     }
-  //   };
-
-  //   fetchWeatherData();
-  // }, [filteredCities, loadedCities]); // Re-fetch on search or load more
-
   useEffect(() => {
     const fetchWeatherData = async () => {
       if (filteredCities.length > 0) {
         try {
           const results = [...weatherData]; // Keep previously fetched data
-          let fetchedCities = results.map((city) => city.name.toLowerCase()); // Get the names of the fetched cities
- 
+
           for (let city of filteredCities.slice(0, loadedCities)) {
             //looping through the filtered cities
-            if (!fetchedCities.includes(city.toLowerCase())) {
-              const response = await fetch(
-                `https://api.openweathermap.org/data/2.5/weather?q=${city},IN&units=metric&appid=${API_KEY}`
-              );
- 
-              if (response.ok) {
- 
-                const data = await response.json(); //fetching the data
-                if (
-                  data.main &&
-                  typeof data.main.temp_min === "number" &&
-                  typeof data.main.temp_max === "number"
-                ) {
-                  results.push(data);
-                }
-              } else {
-                console.warn(`City not found: ${city}`);
+
+            const response = await fetch(
+              `${WEATHER_BASE_URL}${city},IN&units=metric&appid=${API_KEY}`
+            );
+
+            if (response.ok) {
+              const data = await response.json(); //fetching the data
+              if (
+                data.main &&
+                typeof data.main.temp_min === "number" &&
+                typeof data.main.temp_max === "number"
+              ) {
+                results.push(data);
               }
+            } else {
+              console.warn(`City not found: ${city}`);
             }
           }
- 
+
           setWeatherData(results);
         } catch (error) {
           console.error("Error fetching weather data:", error);
         }
       }
     };
- 
+
     fetchWeatherData();
   }, [filteredCities, loadedCities]);
 
@@ -251,7 +189,7 @@ const CityList = ({ setSelectedCity, mode }) => {
         value={searchTerm}
         pattern="[A-Za-z]*"
         title="Only letters are allowed"
-        // onChange={(e) => setSearchTerm(e.target.value)}
+       
         onChange={handleSearchInputChange}
       />
 
@@ -259,7 +197,9 @@ const CityList = ({ setSelectedCity, mode }) => {
       <div className="table-container">
         <div style={{ maxHeight: "400px", overflowY: "auto" }} ref={tableRef}>
           {noMatches ? (
-            <p><b style={{color:"#24609C"}}>Matches Not Found</b></p>
+            <p>
+              <b style={{ color: "#24609C" }}>Matches Not Found</b>
+            </p>
           ) : (
             <table
               className={mode === "light" ? "table-ct-light" : "table-ct-dark"}

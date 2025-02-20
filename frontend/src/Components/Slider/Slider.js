@@ -5,7 +5,8 @@ import { img1, img2, img3, img4, img5 } from "./images";
 import cities from "./cityArray";
 
 const apiKey = process.env.REACT_APP_API_KEY;
-const WEATHERAPIBASEURL = process.env.REACT_OPEN_WEATHER_URL;
+const base_url=process.env.REACT_APP_OPENWEATHER_API_URL;
+
 
 const Slider = ({ mode }) => {
   const [cityDetails, setCityDetails] = useState({});
@@ -16,7 +17,7 @@ const Slider = ({ mode }) => {
 
       for (const city of cities) {
         
-        const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city.name}&appid=${apiKey}&units=metric`);
+        const response = await fetch(`${base_url}${city.name}&appid=${apiKey}&units=metric`);
         const data = await response.json();
         fetchedData[city.name] = {
           temperature: data.main.temp,
@@ -31,8 +32,11 @@ const Slider = ({ mode }) => {
       setCityDetails(fetchedData);
     };
 
+   
+
     fetchWeatherData();
   }, []);
+
 
   const weatherImageMap = {
     clear: img1,
